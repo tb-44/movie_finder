@@ -1,0 +1,12 @@
+.titlebar {
+    background-color: #282c34;
+    color: lightblue;
+    padding-left: 16px;
+    display: block;
+    width: 100%;
+}
+
+.title {
+    text-align: center;
+    padding: 8px;
+}
