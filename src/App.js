@@ -1,45 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
-import Nav from "././components/Nav";
-import SearchBox from "././components/SearchBox";
-class App extends React.Component {
-  // eslint-disable-next-line no-useless-constructor
-  constructor() {
-    super();
-    this.state = {
-      movies: [],
-      searchItems: "",
-    };
-    this.apiKey = process.env.REACT_APP_API;
-  }
+import Nav from "./components/Nav/Nav";
+import SearchBox from "./components/SearchBox/SearchBox";
 
-  handleSubmit = (e) => {
+function App() {
+  const [movie, setMovie] = useState({ movies: [] });
+  const [search, setSearch] = useState({ searchItems: "" });
+  const apiKey = process.env.REACT_APP_API;
+
+  useEffect(() => {
+    //console.log("in use effect");
+  }, []);
+
+  const handleMovies = (e) => {
     e.preventDefault();
-    fetch(
-      `https://api.themoviedb.org/3/movie?api_key=${this.apiKey}&query=${this.state.searchItems}`
-    )
+    fetch(`https://api.themoviedb.org/3/movie/550?api_key=${apiKey}`)
       .then((response) => response.json())
       .then((response) => {
-        console.log(response.results);
-        this.setState({ movies: [...response.results] });
+        console.log(response);
+        setMovie({ ...movie, movies: response.data });
       });
   };
 
-  handleChange = (e) => {
-    this.setState({ searchItems: e.target.value });
+  const handleSearch = (e) => {
+    setSearch({ ...search, searchItems: e.target.value });
   };
 
-  render() {
-    return (
-      <div className="App">
-        <Nav />
-        <SearchBox
-          handleSubmit={this.handleSubmit}
-          handleChange={this.handleChange}
-        />
-      </div>
-    );
-  }
+  return (
+    <div className="App">
+      <Nav />
+      <SearchBox onSubmit={handleMovies} onChange={handleSearch} />
+    </div>
+  );
 }
 
 export default App;

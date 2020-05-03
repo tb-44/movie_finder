@@ -6,12 +6,12 @@ const SearchBox = (props) => {
     <div className="searchbox">
       <div className="row">
         <section className="column">
-          <form action="" onSubmit={props.handleSubmit}>
+          <form action="" onSubmit={props.handleMovies}>
             <div className="field">
               <input
                 placeholder="Search Movie"
                 type="text"
-                onChange={props.handleChange}
+                onChange={props.handleSearch}
               />
             </div>
           </form>
