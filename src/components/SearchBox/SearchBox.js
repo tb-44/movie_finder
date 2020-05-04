@@ -1,23 +1,27 @@
-import React from "react";
-import "./SearchBox.css";
+import React, { useState } from "react";
 
-const SearchBox = (props) => {
+const SearchBox = ({ search }) => {
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleSearch = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const resetSearchBox = () => {
+    setSearchValue("");
+  };
+
+  const callSearch = (e) => {
+    e.preventDefault();
+    search(searchValue);
+    resetSearchBox();
+  };
+
   return (
-    <div className="searchbox">
-      <div className="row">
-        <section className="column">
-          <form action="" onSubmit={props.handleMovies}>
-            <div className="field">
-              <input
-                placeholder="Search Movie"
-                type="text"
-                onChange={props.handleSearch}
-              />
-            </div>
-          </form>
-        </section>
-      </div>
-    </div>
+    <form className="search">
+      <input value={searchValue} onChange={handleSearch} type="text" />
+      <input onClick={callSearch} type="submit" value="SEARCH" />
+    </form>
   );
 };
 

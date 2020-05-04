@@ -1,37 +1,71 @@
-import React, { useState, useEffect } from "react";
-import "./App.css";
+import React, { useReducer, useEffect } from "react";
 import Nav from "./components/Nav/Nav";
+import Movie from "./components/Movie/Movie";
+import spinner from "./assets/loading.gif";
 import SearchBox from "./components/SearchBox/SearchBox";
+import { initialState, reducer } from "./reducer/index";
+import axios from "axios";
+import "./App.css";
 
-function App() {
-  const [movie, setMovie] = useState({ movies: [] });
-  const [search, setSearch] = useState({ searchItems: "" });
-  const apiKey = process.env.REACT_APP_API;
+const REACT_APP_URL = `https://www.omdbapi.com/?s=man&apikey=${process.env.REACT_APP_APIID}`;
+
+const App = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    //console.log("in use effect");
+    axios.get(REACT_APP_URL).then((response) => {
+      dispatch({
+        type: "SEARCH_MOVIES_SUCCESS",
+        payload: response.data.Search,
+      });
+    });
   }, []);
 
-  const handleMovies = (e) => {
-    e.preventDefault();
-    fetch(`https://api.themoviedb.org/3/movie/550?api_key=${apiKey}`)
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
-        setMovie({ ...movie, movies: response.data });
-      });
+  const search = (searchValue) => {
+    dispatch({
+      type: "SEARCH_MOVIES_REQUEST",
+    });
+
+    axios(
+      `https://www.omdbapi.com/?s=${searchValue}&apikey=${process.env.REACT_APP_APIID}`
+    ).then((res) => {
+      if (res.data.Response === "True") {
+        dispatch({
+          type: "SEARCH_MOVIES_SUCCESS",
+          payload: res.data.Search,
+        });
+      } else {
+        dispatch({
+          type: "SEARCH_MOVIES_FAILURE",
+          error: res.data.Error,
+        });
+      }
+    });
   };
 
-  const handleSearch = (e) => {
-    setSearch({ ...search, searchItems: e.target.value });
-  };
+  const { movies, errorMessage, loading } = state;
+
+  const retrievedMovies =
+    loading && !errorMessage ? (
+      <img className="spinner" src={spinner} alt="Loading spinner" />
+    ) : errorMessage ? (
+      <div className="errorMessage">{errorMessage}</div>
+    ) : (
+      movies.map((movie, index) => (
+        <Movie key={`${index}-${movie.Title}`} movie={movie} />
+      ))
+    );
 
   return (
     <div className="App">
-      <Nav />
-      <SearchBox onSubmit={handleMovies} onChange={handleSearch} />
+      <div className="m-container">
+        <Nav text="MovieFinder" />
+        <SearchBox search={search} />
+        <p className="App-intro">Share a few favourite movies</p>
+        <div className="movies">{retrievedMovies}</div>
+      </div>
     </div>
   );
-}
+};
 
 export default App;
