@@ -18,10 +18,19 @@ const SearchBox = ({ search }) => {
   };
 
   return (
-    <form className="search">
-      <input value={searchValue} onChange={handleSearch} type="text" />
-      <input onClick={callSearch} type="submit" value="SEARCH" />
-    </form>
+    <section className="movieSearch">
+      <form className="search">
+        <input
+          action=""
+          className="searchbox"
+          value={searchValue}
+          onChange={handleSearch}
+          placeholder="Search movies"
+          type="text"
+        />
+        <input onClick={callSearch} type="submit" value="SEARCH" />
+      </form>
+    </section>
   );
 };
 

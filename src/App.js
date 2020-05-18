@@ -61,7 +61,7 @@ const App = () => {
       <div className="m-container">
         <Nav text="MovieFinder" />
         <SearchBox search={search} />
-        <p className="App-intro">Share a few favourite movies</p>
+        <p className="App-intro">Movies from search</p>
         <div className="movies">{retrievedMovies}</div>
       </div>
     </div>
